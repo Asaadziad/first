@@ -1,48 +1,38 @@
 import tkinter as tk
-from tkinter import Frame,ttk
+from tkinter import Button, Canvas, Entry, Frame, Label, StringVar, Toplevel,ttk
 
-from Player import Player
+root = tk.Tk()
+root.title("Daddy's toDo App")
+root.geometry("400x400")
+canvas = Canvas(root)
+canvas.pack()
 
-    
-class loadPlayer(tk.Frame):
-    def __init__(self,root):
-        super().__init__(root)
-        self.createPlayer()
+def addText():
+    file_text = open("test.txt", "a")
+    file_text.write(entry1.get()+'\n')
+    entry1.delete(0, 'end')
 
-    def createPlayer(self):
-        p = Player("Asaad")
-        ttk.Label(self, text=p.getName()).grid(column=0,row=2)
+label = Label(root, text="add your next task").pack()
+canvas.create_rectangle(30, 10, 350, 80,
+    outline="#fb0", fill="#fb0")
+canvas.create_text(190, 45, text="Welcome home daddy")
 
-class mainFrame(tk.Frame):
-    def __init__(self, root):
-        super().__init__(root)
-        
-        self.widgets()
-    
-    def widgets(self):
-        ttk.Button(self, text='Replace').grid(column=0, row=0)
+file1 = open("test.txt", "r")
 
+canvas.create_text(190, 100, text="List of things to do:")
+j = 0
+for i,line in enumerate(file1):
+    canvas.create_text(190, 125+j, text=str(i)+") "+line)
+    j = j+20
 
-class engine(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.widgets()
-        self.title("App")
-        self.geometry("900x600")
-        self.resizable(False,False)
-    
-    def widgets(self):
-        loggedIn = False
-        while loggedIn:
-            main_frame = mainFrame(self) 
-            main_frame.grid(column=0,row=0)
-            load_players = loadPlayer(self)
-            load_players.grid(column=0,row=1)
-        ttk.Label(self, text="Please Login or Register").grid(column=0,row=0)
-        ttk.Button(self, text="Login").grid(column=0,row=1)
-        ttk.Button(self, text="Register").grid(column=1,row=1)
+file1.close()
 
-if __name__ == "__main__":
+label1= Label(root, text="Description:",padx=10)
+label1.pack()
+entry1 = Entry(root)
+entry1.pack()
 
-    app = engine()
-    app.mainloop()
+button1 = Button(root,text="add me daddy",command=addText)
+button1.pack()
+
+root.mainloop()
