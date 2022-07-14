@@ -1,38 +1,58 @@
 import tkinter as tk
 from tkinter import Button, Canvas, Entry, Frame, Label, StringVar, Toplevel,ttk
+from typing import Text
 
 root = tk.Tk()
 root.title("Daddy's toDo App")
 root.geometry("400x400")
-canvas = Canvas(root)
-canvas.pack()
+root.resizable(False,False)
+root.columnconfigure(0, weight=4)
+root.columnconfigure(1,weight=1)
+frame = Frame(root)
+frame.grid(column=0,row=0,padx=10,pady=10)
+frame2 = Frame(root)
+frame2.grid(column=0,row=1,padx=10,pady=10)
+frame3 = Frame(root)
+frame3.grid(column=1,row=0,padx=10,pady=10)
+
+#Arguments:
+#Frame f
+#Functionality: clears frame
+def clear_widget(f):
+    for widget in f.winfo_children():
+        widget.destroy()
+
+def update():
+    clear_widget(frame2)
+    label2 = Label(frame2, text="Tasks to do:",justify="center").pack()
+    file = open("test.txt", "r")
+    text_file = Label(frame2, text=file.read(),justify="center").pack()
+    file.close()
 
 def addText():
     file_text = open("test.txt", "a")
     file_text.write(entry1.get()+'\n')
+    file_text.close()
     entry1.delete(0, 'end')
+    update()
 
-label = Label(root, text="add your next task").pack()
-canvas.create_rectangle(30, 10, 350, 80,
-    outline="#fb0", fill="#fb0")
-canvas.create_text(190, 45, text="Welcome home daddy")
+def clearText():
+    file_text = open("test.txt", "r+")
+    file_text.truncate(0)
+    file_text.close()
+    update()
 
-file1 = open("test.txt", "r")
 
-canvas.create_text(190, 100, text="List of things to do:")
-j = 0
-for i,line in enumerate(file1):
-    canvas.create_text(190, 125+j, text=str(i)+") "+line)
-    j = j+20
+label = Label(frame, text="add your next task:",justify="center",pady=10).pack()
 
-file1.close()
+update()
 
-label1= Label(root, text="Description:",padx=10)
-label1.pack()
-entry1 = Entry(root)
+entry1 = Entry(frame,justify="center")
 entry1.pack()
 
-button1 = Button(root,text="add me daddy",command=addText)
+button1 = Button(frame,text="add me daddy",justify="center",command=addText)
 button1.pack()
+button2 = Button(frame3,text="clear me daddy",justify="center",fg="red",command=clearText)
+button2.pack()
 
 root.mainloop()
